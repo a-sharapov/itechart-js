@@ -23,13 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     switch (parameters.dialogType) {
       case "popup":
-        out[ts] = new CustomDialog(parameters)
+        out[ts] = new customDialog(parameters)
         break;
       case "toast":
-        out[ts] = new ToastCustomDialog(parameters)
+        out[ts] = new toastCustomDialog(parameters)
         break;
       case "window":
-        out[ts] = new WindowCustomDialog(parameters)
+        out[ts] = new windowCustomDialog(parameters)
         break;
     }
 

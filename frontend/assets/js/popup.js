@@ -1,7 +1,23 @@
 'use strict'
+var __extends = function (toastCustomDialog, customDialog) {
+  function fn() {
+    this.constructor = toastCustomDialog
+  }
+  fn.prototype = customDialog.prototype
+  toastCustomDialog.prototype = new fn()
+}
+
+var ___extends = function (windowCustomDialog, toastCustomDialog) {
+  function fn() {
+    this.constructor = windowCustomDialog
+  }
+  fn.prototype = toastCustomDialog.prototype
+  windowCustomDialog.prototype = new fn()
+}
+
 // modifier: error|warning|success|default:info
-class CustomDialog {
-  constructor(options = {}) {
+var customDialog = (function () {
+  function customDialog(options = {}) {
     Object.assign(this, {
       dialogType: "popup",
       $el: document.createElement("dialog"),
@@ -10,22 +26,22 @@ class CustomDialog {
       modifier: "info"
     }, options)
   }
-  dialogId() {
+  customDialog.prototype.dialogId = function () {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
   }
-  setAssets(target, options) {
+  customDialog.prototype.setAssets = function (target, options) {
     for (const [p, v] of Object.entries(options)) {
       target.setAttribute(p, v)
     }
   }
-  mutate(target) {
+  customDialog.prototype.mutate = function (target) {
     target.addEventListener("click", () => {
       this.hide()
       this.destroy()
     }, false)
     void 0
   }
-  create() {
+  customDialog.prototype.create = function () {
     this.setAssets(this.$el, {
       "class": this.dialogType,
       "id": this.dialogId(),
@@ -36,40 +52,43 @@ class CustomDialog {
     document.querySelector(this.parent).appendChild(this.$el)
     void 0
   }
-  destroy() {
+  customDialog.prototype.destroy = function () {
     this.$el.remove()
     void 0
   }
-  show() {
+  customDialog.prototype.show = function () {
     this.$el.classList.add('displayed')
     void 0
   }
-  hide() {
+  customDialog.prototype.hide = function () {
     this.$el.classList.remove('displayed')
     void 0
   }
-}
+  return customDialog
+})()
 
-class ToastCustomDialog extends CustomDialog {
-  constructor(options = {}) {
-    super(options)
+var toastCustomDialog = (function (CustomDialog) {
+  __extends(toastCustomDialog, CustomDialog)
+
+  function toastCustomDialog(options = {}) {
+    CustomDialog.call(this)
     Object.assign(this, {
       dialogType: "toast",
       parent: "body",
       hiderCounter: 5e3,
     }, options)
   }
-  getNextTop() {
+  toastCustomDialog.prototype.getNextTop = function () {
     if (document.body.contains(document.querySelector(".toast"))) {
       const toasts = document.querySelectorAll(".toast")
-      return toasts[toasts.length-1].offsetTop + toasts[toasts.length-1].clientHeight
+      return toasts[toasts.length - 1].offsetTop + toasts[toasts.length - 1].clientHeight
     }
     return 0
   }
-  createCloseBtn(target) {
+  toastCustomDialog.prototype.createCloseBtn = function (target) {
     const closeButton = document.createElement("span")
     this.setAssets(target, {
-    "data-top": this.getNextTop()
+      "data-top": this.getNextTop()
     })
     this.setAssets(closeButton, {
       "class": "state-modifier",
@@ -85,7 +104,7 @@ class ToastCustomDialog extends CustomDialog {
     }, false)
     target.prepend(closeButton)
   }
-  mutate(target) {
+  toastCustomDialog.prototype.mutate = function (target) {
     let sT
     this.createCloseBtn(target)
     const elHide = new Promise((resolve, reject) => {
@@ -101,21 +120,25 @@ class ToastCustomDialog extends CustomDialog {
     })
     void 0
   }
-}
+  return toastCustomDialog
+})(customDialog)
 
-class WindowCustomDialog extends ToastCustomDialog {
-  constructor(options = {}) {
-    super(options)
+
+var windowCustomDialog = (function (toastCustomDialog) {
+  __extends(windowCustomDialog, toastCustomDialog)
+
+  function windowCustomDialog(options = {}) {
+    toastCustomDialog.call(this)
     Object.assign(this, {
       dialogType: "window",
       parent: ".overlay"
     }, options)
   }
-  destroy() {
+  windowCustomDialog.prototype.destroy = function () {
     document.querySelector(".overlay").innerHTML = ""
     void 0
   }
-  createOverlay(target) {
+  windowCustomDialog.prototype.createOverlay = function (target) {
     if (document.body.contains(document.querySelector(".overlay"))) {
       document.querySelector(".overlay").classList.remove('hidden')
     } else {
@@ -130,19 +153,22 @@ class WindowCustomDialog extends ToastCustomDialog {
       }, false)
     }
   }
-  mutate(target) {
+  windowCustomDialog.prototype.mutate = function (target) {
     this.createCloseBtn(target)
     this.createOverlay(target)
     void 0
   }
-  hide() {
+  windowCustomDialog.prototype.hide = function () {
     const elHide = new Promise((resolve, reject) => {
       this.$el.classList.remove('displayed')
       document.querySelector(".overlay").classList.add('hidden')
       document.querySelector("html").classList.remove('noscroll')
       resolve(true)
     })
-    elHide.finally(() => {this.destroy()})
+    elHide.finally(() => {
+      this.destroy()
+    })
     void 0
   }
-}
+  return windowCustomDialog
+})(toastCustomDialog)
