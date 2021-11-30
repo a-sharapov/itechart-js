@@ -5,15 +5,7 @@ var __extends = function (toastCustomDialog, customDialog) {
   }
   fn.prototype = customDialog.prototype
   toastCustomDialog.prototype = new fn()
-}
-
-var ___extends = function (windowCustomDialog, toastCustomDialog) {
-  function fn() {
-    this.constructor = windowCustomDialog
-  }
-  fn.prototype = toastCustomDialog.prototype
-  windowCustomDialog.prototype = new fn()
-}
+} 
 
 // modifier: error|warning|success|default:info
 var customDialog = (function () {
