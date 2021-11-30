@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="author" content="a-sharapov" />
+  <title>Popup Window Demo!</title>
+  <link rel="stylesheet" href="additions/demo.css" />
+</head>
+
+<body>
+  <main id="app" data-role="demo">
+    <h1>Нотификаторы:</h1>
+    <p>Для старта можно изменить один или несколько из доступных параметров и нажать кнопку <strong>&laquo;Сгенерировать&raquo;</strong></p>
+    <hr />
+    <form id="demo-form" method="POST">
+      <label data-width="half">
+        Тип диалога:<br />
+        <select name="dialogType">
+          <option value="popup">Popup (по умолчанию)</option>
+          <option value="toast">Toast</option>
+          <option value="window">Window</option>
+        </select>
+      </label><label data-width="half">
+        Тип состояния:<br />
+        <select name="modifier">
+          <option value="info">Info (по умолчанию)</option>
+          <option value="warning">Warning</option>
+          <option value="success">Success</option>
+          <option value="error">Error</option>
+        </select>
+      </label><label data-width="full">
+        <input name="hiderCounter" type="number" min="1" step="1" value="" placeholder="Время исчезновения (для Toast), по умолчанию: 5 сек" />
+      </label><label data-width=full>
+        <textarea name="content" placeholder="Содержимое" rows="5"></textarea>
+      </label>
+      <label data-width="full" data-align="center"><button class="highlighted" type="submit">Сгенерировать</button></label>
+    </form>
+  </main>
+  <div class="background"></div>
+  <script src="assets/js/popup.js" type="text/javascript"></script>
+  <script src="additions/demo.js" type="text/javascript"></script>
+</body>
+
+</html>
