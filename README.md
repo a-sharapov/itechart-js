@@ -4,4 +4,4 @@
 1. ES6
 2. ES5
 
-![Видео-превью](https://sharapov.tech/assets/custom/demo.gif "Demo")
+[GIF-превью](https://sharapov.tech/assets/custom/demo.gif)
