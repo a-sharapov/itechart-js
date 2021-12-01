@@ -140,8 +140,8 @@ var windowCustomDialog = (function (toastCustomDialog) {
       })
       document.querySelector("body").appendChild(windowOverlay)
       document.querySelector("html").classList.add('noscroll')
-      windowOverlay.addEventListener("click", () => {
-        this.hide()
+      windowOverlay.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("window")) {this.hide()}
       }, false)
     }
     return
