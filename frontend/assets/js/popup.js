@@ -1,10 +1,10 @@
 'use strict'
-var __extends = function (toastCustomDialog, customDialog) {
+var __extends = function (child, parent) {
   function fn() {
-    this.constructor = toastCustomDialog
+    this.constructor = child
   }
-  fn.prototype = customDialog.prototype
-  toastCustomDialog.prototype = new fn()
+  fn.prototype = parent.prototype
+  child.prototype = new fn()
 } 
 
 // modifier: error|warning|success|default:info
@@ -22,7 +22,7 @@ var customDialog = (function () {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
   }
   customDialog.prototype.setAssets = function (target, options) {
-    for (const [p, v] of Object.entries(options)) {
+    for (var [p, v] of Object.entries(options)) {
       target.setAttribute(p, v)
     }
   }
@@ -31,7 +31,7 @@ var customDialog = (function () {
       this.hide()
       this.destroy()
     }, false)
-    void 0
+    return
   }
   customDialog.prototype.create = function () {
     this.setAssets(this.$el, {
@@ -42,19 +42,19 @@ var customDialog = (function () {
     this.$el.innerHTML = this.content.toString()
     this.mutate(this.$el)
     document.querySelector(this.parent).appendChild(this.$el)
-    void 0
+    return
   }
   customDialog.prototype.destroy = function () {
     this.$el.remove()
-    void 0
+    return
   }
   customDialog.prototype.show = function () {
     this.$el.classList.add('displayed')
-    void 0
+    return
   }
   customDialog.prototype.hide = function () {
     this.$el.classList.remove('displayed')
-    void 0
+    return
   }
   return customDialog
 })()
@@ -72,13 +72,13 @@ var toastCustomDialog = (function (CustomDialog) {
   }
   toastCustomDialog.prototype.getNextTop = function () {
     if (document.body.contains(document.querySelector(".toast"))) {
-      const toasts = document.querySelectorAll(".toast")
+      var toasts = document.querySelectorAll(".toast")
       return toasts[toasts.length - 1].offsetTop + toasts[toasts.length - 1].clientHeight
     }
     return 0
   }
   toastCustomDialog.prototype.createCloseBtn = function (target) {
-    const closeButton = document.createElement("span")
+    var closeButton = document.createElement("span")
     this.setAssets(target, {
       "data-top": this.getNextTop()
     })
@@ -88,7 +88,7 @@ var toastCustomDialog = (function (CustomDialog) {
       "data-target": target.getAttribute("id")
     })
     closeButton.addEventListener("click", () => {
-      const elHide = new Promise((resolve, reject) => {
+      var elHide = new Promise((resolve) => {
         this.hide()
         resolve(true)
       })
@@ -97,9 +97,9 @@ var toastCustomDialog = (function (CustomDialog) {
     target.prepend(closeButton)
   }
   toastCustomDialog.prototype.mutate = function (target) {
-    let sT
+    var sT
     this.createCloseBtn(target)
-    const elHide = new Promise((resolve, reject) => {
+    var elHide = new Promise((resolve) => {
       sT = setTimeout(() => {
         this.hide()
         resolve(true)
@@ -110,7 +110,7 @@ var toastCustomDialog = (function (CustomDialog) {
     }).finally(() => {
       clearTimeout(sT)
     })
-    void 0
+    return
   }
   return toastCustomDialog
 })(customDialog)
@@ -128,13 +128,13 @@ var windowCustomDialog = (function (toastCustomDialog) {
   }
   windowCustomDialog.prototype.destroy = function () {
     document.querySelector(".overlay").innerHTML = ""
-    void 0
+    return
   }
   windowCustomDialog.prototype.createOverlay = function (target) {
     if (document.body.contains(document.querySelector(".overlay"))) {
       document.querySelector(".overlay").classList.remove('hidden')
     } else {
-      let windowOverlay = document.createElement("div")
+      var windowOverlay = document.createElement("div")
       this.setAssets(windowOverlay, {
         "class": "overlay"
       })
@@ -144,14 +144,15 @@ var windowCustomDialog = (function (toastCustomDialog) {
         this.hide()
       }, false)
     }
+    return
   }
   windowCustomDialog.prototype.mutate = function (target) {
     this.createCloseBtn(target)
     this.createOverlay(target)
-    void 0
+    return
   }
   windowCustomDialog.prototype.hide = function () {
-    const elHide = new Promise((resolve, reject) => {
+    var elHide = new Promise((resolve, reject) => {
       this.$el.classList.remove('displayed')
       document.querySelector(".overlay").classList.add('hidden')
       document.querySelector("html").classList.remove('noscroll')
@@ -160,7 +161,7 @@ var windowCustomDialog = (function (toastCustomDialog) {
     elHide.finally(() => {
       this.destroy()
     })
-    void 0
+    return
   }
   return windowCustomDialog
 })(toastCustomDialog)
